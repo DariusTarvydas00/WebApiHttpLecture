@@ -73,8 +73,6 @@ namespace UserInterface
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<IRatingService, RatingService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddCors(options =>
