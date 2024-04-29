@@ -24,7 +24,7 @@ namespace WebApi.ServiceLayer
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByYearAscending, bool? sortByReviewsAscending, bool? sortByRatingAscending)
+        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending)
         {
             var query = _bookRepository.GetAllBooksQueryable();
 

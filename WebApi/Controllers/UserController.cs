@@ -6,6 +6,7 @@ using System.Text;
 using UserInterface.JwtLayer;
 using WebApi.DataAccessLayer;
 using WebApi.DataAccessLayer.Models;
+using WebApi.ServiceLayer;
 
 namespace WebApi.Controllers;
 
@@ -25,80 +26,68 @@ public class RegisterRequestDto
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly MainDbContext _userContext;
+    private readonly IUserService _userService;
     private readonly IJwtService _jwtService;
 
-    public UserController(MainDbContext userContext, IJwtService jwtService)
+    public UserController(IUserService userService, IJwtService jwtService)
     {
-        _userContext = userContext;
+        _userService = userService;
         _jwtService = jwtService;
     }
 
-    [AllowAnonymous]
-    [HttpPost("SignUp")]
-    public ActionResult<UserModel> SignUp(RegisterRequestDto model)
-    {
-        if (_userContext.Users.Any(u => u.Username == model.UserEmail))
-            return Conflict("User already exists");
-
-        var user = CreateUser(model.UserEmail, model.Password, model.Roles);
-        _userContext.Add(user);
-        _userContext.SaveChanges();
-        return Ok(user);
-    }
-
-    [AllowAnonymous]
-    [HttpPost("LogIn")]
-    public ActionResult<string> Login(LoginModel model)
-    {
-        var user = _userContext.Users.FirstOrDefault(x => x.Username == model.Username);
-
-        if (user == null || !VerifyPassword(model.Password, user.PasswordHash, user.PasswordSalt))
-        {
-            return Unauthorized("Invalid email or password");
-        }
-
-        var token = _jwtService.GetJWT(user.Username, user.Role);
-        return Ok(new LoginResponseDto { Token = token });
-    }
-
-    [HttpGet("GetUser")]
+    [HttpGet]
     [Authorize(Roles = "Admin")]
-    public ActionResult<UserModel> GetUser(string username)
+    public ActionResult<IEnumerable<UserModel>> Get()
     {
-        var user = _userContext.Users.FirstOrDefault(x => x.Username == username);
+        var users = _userService.GetAll();
+        return Ok(users);
+    }
 
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin")]
+    public ActionResult<UserModel> Get(int id)
+    {
+        var user = _userService.GetById(id);
         if (user == null)
             return NotFound();
-
         return Ok(user);
     }
 
-    private bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
+    [HttpPost]
+    [AllowAnonymous]
+    public ActionResult<UserModel> Post(RegisterRequestDto model)
     {
-        using var hmac = new HMACSHA512(passwordSalt);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-        return computedHash.SequenceEqual(passwordHash);
+        var user = _userService.Create(model);
+        return Ok(user);
     }
 
-    private UserModel CreateUser(string username, string password, string[] roles)
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Put(int id, RegisterRequestDto model)
     {
-        CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
-        UserModel user = new UserModel
+        try
         {
-            Username = username,
-            PasswordHash = passwordHash,
-            PasswordSalt = passwordSalt,
-            Role = roles != null && roles.Any() ? string.Join(",", roles) : "User"
-        };
-        return user;
+            _userService.Update(id, model);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Delete(int id)
     {
-        using var hmac = new HMACSHA512();
-        passwordSalt = hmac.Key;
-        passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        try
+        {
+            _userService.Delete(id);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }
