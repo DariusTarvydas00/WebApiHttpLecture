@@ -21,6 +21,11 @@ public class UserRepository : IUserRepository
     {
         return _userContext.Users.FirstOrDefault(u => u.Username == username);
     }
+    public IEnumerable<ReviewModel> GetUserReviews(int userId)
+    {
+        return _userContext.Reviews.Where(r => r.UserId == userId).ToList();
+    }
+
 
     public IEnumerable<UserModel> GetAll()
     {
