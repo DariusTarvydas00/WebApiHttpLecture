@@ -98,4 +98,9 @@ public class UserService : IUserService
         passwordSalt = hmac.Key;
         passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
     }
+
+    public ICollection<ReviewModel> GetReviews(string username)
+    {
+        throw new NotImplementedException();
+    }
 }
