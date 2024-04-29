@@ -19,7 +19,7 @@ namespace WebApi.Mappings
                 .ReverseMap();
 
             CreateMap<ReviewModel, ReviewDto>()
-               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name))
+               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
                .ForMember(dest => dest.ReviewText, opt => opt.MapFrom(src => src.ReviewText))
                .ReverseMap();
