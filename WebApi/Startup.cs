@@ -77,6 +77,8 @@ namespace UserInterface
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowLocalhost5173",
