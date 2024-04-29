@@ -7,22 +7,22 @@ namespace WebApi.DataAccessLayer
     public class MainDbContext : DbContext
     {
 
-     public DbSet<BookModel> Books { get; set; }
+        public DbSet<BookModel> Books { get; set; }
         public DbSet<ReviewModel> Reviews { get; set; }
         public DbSet<UserModel> Users { get; set; }
 
 
-    public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
-    {
+        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
+        {
 
-    }
+        }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-    {
-              
-    }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -50,5 +50,5 @@ namespace WebApi.DataAccessLayer
             modelBuilder.Entity<BookModel>()
                 .ToTable("Books");
         }
-  }
+    }
 }
