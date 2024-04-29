@@ -1,16 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Accord.Math.Distances;
 using Microsoft.AspNetCore.Authorization;
+using WebApi.ServiceLayer.Interfaces;
+using WebApi.ServiceLayer;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class RecommendationsController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetRecommendations()
+        private readonly IRecommendationsService _recommendationService;
+        private readonly IUserService _userService;
+
+        public RecommendationsController(IRecommendationsService recommendationsService, IUserService userService)
+        {
+            _recommendationService = recommendationsService;
+            _userService = userService;
+        }
+
+        [HttpGet("RecommendationTest")]
+        public async Task<IActionResult> GetRecommendationsTEST()
         {
             double[] a = { 1, 2 };
             double[] b = { 2, 4 };
@@ -34,5 +44,21 @@ namespace WebApi.Controllers
             //when we have the similarity between the two items we can recommend the item with the highest similarity to the logged in user
             //but this will not have qualitative features accounted for, i still want to recoment harry potter 2 to someone who liked harry potter 1, even if i dont know the ratings
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetRecommendations([FromQuery] string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Username is required");
+            }
+            //if (!_userService.GetUser(username))
+            //{
+            //    return NotFound("User not found");
+            //}
+            return Ok(_recommendationService.GetRecommendations(username));
+        }
+
     }
 }
