@@ -1,13 +1,34 @@
-﻿namespace WebApi.DataAccessLayer.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class UserModel
+namespace WebApi.DataAccessLayer.Models
 {
-    public int Id { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
-    public string Role { get; set; }
 
-    
+    [Table("Users")]
+    public class UserModel
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string UserName { get; set; }
+
+
+        [EmailAddress]
+        [StringLength(100)]
+        public string Email { get; set; }
+      
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+
+        [StringLength(50)]
+        public string Role { get; set; }
+
+
+        public virtual ICollection<ReviewModel> Reviews { get; set; } = new HashSet<ReviewModel>();
+    }
 }
+
+   
