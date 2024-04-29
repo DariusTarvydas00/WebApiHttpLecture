@@ -27,6 +27,16 @@ public class UserService : IUserService
         return _userContext.Users.Find(id);
     }
 
+    public UserModel GetByUsername(string username)
+    {
+        return _userRepository.GetByUsername(username);
+    }
+
+    public IEnumerable<ReviewModel> GetUserReviews(int userId)
+    {
+        return _userContext.Reviews.Where(r => r.UserId == userId).ToList();
+    }
+
     public IEnumerable<UserModel> GetAll()
     {
         return _userContext.Users.ToList();
