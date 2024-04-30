@@ -8,6 +8,5 @@ public interface IReviewRepository
     public List<Review> GetAllReviews();
     public Review RemoveReview(int reviewToDeleteId);
     public List<Review> GetReviewsByBookId(int bookId);
-
-
+    public List<Review> GetReviewsByUser(int userId);
 }

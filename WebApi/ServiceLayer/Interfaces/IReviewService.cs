@@ -7,4 +7,5 @@ public interface IReviewService
     public Review CreateNewReview(Review review);
     public List<Review> GetAllReviewsByBookId(int bookId);
     public Review RemoveReview(int reviewId);
+    public Task<List<Review>> GetReviewsByUser(int userId);
 }

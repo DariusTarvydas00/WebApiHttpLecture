@@ -51,11 +51,6 @@ namespace WebApi.ServiceLayer
             await _userRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<Review>> GetUserReviews(int userId)
-        {
-            return await _userRepository.GetUserReviews(userId);
-        }
-
         public async Task SignUp(string username, string password)
         {
             var usr = await _userRepository.GetByUserName(username);
@@ -101,11 +96,6 @@ namespace WebApi.ServiceLayer
             using var hmac = new HMACSHA512();
             passwordSalt = hmac.Key;
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
-
-        public async Task<IEnumerable<Review>> GetReviews(string username)
-        {
-            throw new NotImplementedException();
         }
     }
 }
