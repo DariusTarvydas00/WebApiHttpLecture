@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Accord.Math.Distances;
+﻿using Accord.Math.Distances;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.ServiceLayer.Interfaces;
-using WebApi.ServiceLayer;
 
 namespace WebApi.Controllers
 {
@@ -53,11 +52,19 @@ namespace WebApi.Controllers
             {
                 return BadRequest("Username is required");
             }
-            //if (!_userService.GetUser(username))
-            //{
-            //    return NotFound("User not found");
-            //}
-            return Ok(_recommendationService.GetRecommendations(username));
+            if ((await _userService.GetByUserName(username)) is null)
+            {
+                return NotFound("User not found");
+            }
+
+            try
+            {
+                return Ok(_recommendationService.GetRecommendations(username));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
