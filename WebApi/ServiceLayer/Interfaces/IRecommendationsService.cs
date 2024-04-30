@@ -4,6 +4,6 @@ namespace WebApi.ServiceLayer.Interfaces
 {
     public interface IRecommendationsService
     {
-        public RecommendationDto GetRecommendations(string username);
+        public Task<RecommendationDto> GetRecommendations(string username);
     }
 }

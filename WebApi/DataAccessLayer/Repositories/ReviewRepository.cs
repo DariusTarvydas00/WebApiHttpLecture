@@ -48,4 +48,9 @@ public class ReviewRepository : IReviewRepository
         query = query.Where(r => r.BookId == bookId);
         return query.ToList();
     }
+
+    public List<Review> GetReviewsByUser(int userId)
+    {
+        return _mainDbContext.Reviews.Where(r => r.UserId == userId).ToList();
+    }
 }

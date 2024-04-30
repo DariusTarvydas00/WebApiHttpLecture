@@ -74,7 +74,7 @@ namespace WebApi.ServiceLayer
             return book != null ? _mapper.Map<BookDto>(book) : null;
         }
 
-        public async Task<IEnumerable<ReviewDto>> GetReviewsByBookId(int bookId)
+        public async Task<IEnumerable<ReviewDto>> GetReviewsByBookIdAsync(int bookId)
         {
             var reviews = await _bookRepository.GetReviewsByBookId(bookId);
             return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
