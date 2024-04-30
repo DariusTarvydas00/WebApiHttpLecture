@@ -11,6 +11,6 @@ public interface IUserService
     Task Update(User model);
     Task Delete(int id);
     Task<IEnumerable<Review>> GetReviews(string username);
-    Task SignUp(string username,string password);
+    Task SignUp(string username,string password, string email);
     Task<User?> LogIn(string username, string password);
 }

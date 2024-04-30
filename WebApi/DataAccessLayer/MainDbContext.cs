@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Accord.IO;
+using Microsoft.EntityFrameworkCore;
 using WebApi.DataAccessLayer.Models;
 
 namespace WebApi.DataAccessLayer
@@ -18,7 +21,6 @@ namespace WebApi.DataAccessLayer
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
         {
 
         }

@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.Data;
 using WebApi.DataAccessLayer.Models;
 using WebApi.ServiceLayer.DTOs;
 using WebApi.ServiceLayer.Interfaces;
+using WebApi.ServiceLayer.JwtLayer;
 
 namespace WebApi.Controllers
 {
@@ -15,10 +12,12 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         }
 
         [HttpGet]
@@ -89,7 +88,7 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] UserDto request)
+        public async Task<IActionResult> SignUp([FromBody] UserRegisterDto request)
         {
             if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
             {
@@ -98,7 +97,7 @@ namespace WebApi.Controllers
 
             try
             {
-                await _userService.SignUp(request.Username, request.Password);
+                await _userService.SignUp(request.Username, request.Password, request.Email);
                 return Ok(new { message = "User created successfully" });
             }
             catch (Exception e)
@@ -116,14 +115,19 @@ namespace WebApi.Controllers
                 var user = await _userService.LogIn(request.Username, request.Password);
                 if (user == null)
                     return BadRequest(new { message = "Invalid username or password." });
-
-                // Return more secure token or user info here.
-                return Ok(new { message = "Logged in successfully" });
+                if (user.Role != null)
+                {
+                    var token = _jwtService.GetJWT(user.Username, user.Role);
+                    // Return more secure token or user info here.
+                    return Ok(token);
+                }
             }
             catch (Exception e)
             {
                 return BadRequest(new { message = e.Message });
             }
+
+            return Ok();
         }
     }
 }

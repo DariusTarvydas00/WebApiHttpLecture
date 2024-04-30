@@ -2,7 +2,6 @@
 using Accord.Math.Distances;
 using Microsoft.AspNetCore.Authorization;
 using WebApi.ServiceLayer.Interfaces;
-using WebApi.ServiceLayer;
 
 namespace WebApi.Controllers
 {

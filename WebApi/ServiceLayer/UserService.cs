@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 using WebApi.ServiceLayer.Interfaces;
@@ -56,14 +53,14 @@ namespace WebApi.ServiceLayer
             return await _userRepository.GetUserReviews(userId);
         }
 
-        public async Task SignUp(string username, string password)
+        public async Task SignUp(string username, string password, string email)
         {
             var usr = await _userRepository.GetByUserName(username);
             if (usr != null)
             {
                 throw new InvalidOperationException("Username already exists. Please choose a different one.");
             }
-            var user = CreateUser(username, password);
+            var user = CreateUser(username, password, email);
             await _userRepository.Create(user);
         }
 
@@ -84,7 +81,7 @@ namespace WebApi.ServiceLayer
             return computedHash.SequenceEqual(storedHash);
         }
 
-        private User CreateUser(string username, string password)
+        private User CreateUser(string username, string password, string email)
         {
             CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
             var user = new User
@@ -92,6 +89,8 @@ namespace WebApi.ServiceLayer
                 Username = username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
+                Email = email,
+                Role = "Admin"
             };
             return user;
         }
