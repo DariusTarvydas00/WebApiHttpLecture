@@ -4,10 +4,10 @@ namespace WebApi.ServiceLayer.DTOs
 {
     public class RecommendationDto
     {
-        public List<BookModel> RecommendedByCosineDistance { get; set; } = new List<BookModel>();
+        public List<Book> RecommendedByCosineDistance { get; set; } = new List<Book>();
 
-        public List<BookModel> RecommendedByMatrixFactorization { get; set; } = new List<BookModel>();
+        public List<Book> RecommendedByMatrixFactorization { get; set; } = new List<Book>();
 
-        public List<BookModel> RecommendedByFieldAwareMatrixF { get; set; } = new List<BookModel>();
+        public List<Book> RecommendedByFieldAwareMatrixF { get; set; } = new List<Book>();
     }
 }

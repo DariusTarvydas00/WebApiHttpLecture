@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.DataAccessLayer.Models
 {
-    public class BookModel
+    public class Book
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,6 +22,6 @@ namespace WebApi.DataAccessLayer.Models
         public int PublicationYear { get; set; }
 
         // Initialize the collection of reviews in the constructor to avoid null references
-        public virtual ICollection<ReviewModel> Reviews { get; set; } = new HashSet<ReviewModel>();
+        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }
 }

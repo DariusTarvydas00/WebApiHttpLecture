@@ -11,20 +11,20 @@ public class ReviewRepository : IReviewRepository
         _mainDbContext = mainDbContext;
     }
 
-    public ReviewModel CreateReview(ReviewModel review)
+    public Review CreateReview(Review review)
     {
         _mainDbContext.Reviews.Add(review);
         _mainDbContext.SaveChanges();
         return review;
     }
 
-    public List<ReviewModel> GetAllReviews()
+    public List<Review> GetAllReviews()
     {
         var reviews = _mainDbContext.Reviews.ToList();
         return reviews;
     }
 
-    public ReviewModel RemoveReview(int reviewToDeleteId)
+    public Review RemoveReview(int reviewToDeleteId)
     {
         var review = _mainDbContext.Reviews.FirstOrDefault(r => r != null && r.Id == reviewToDeleteId);
         if (review == null)
@@ -37,7 +37,7 @@ public class ReviewRepository : IReviewRepository
 
     }
 
-    public List<ReviewModel> GetReviewsByBookId(int bookId)
+    public List<Review> GetReviewsByBookId(int bookId)
     {
         var bookToReview = _mainDbContext.Reviews.FirstOrDefault(review => review.BookId == bookId);
         if (bookToReview == null)

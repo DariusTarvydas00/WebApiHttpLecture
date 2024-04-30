@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.ServiceLayer.DTOs;
 using WebApi.ServiceLayer;
+using WebApi.ServiceLayer.Interfaces;
 
 namespace WebApi.Controllers
 {

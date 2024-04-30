@@ -1,18 +1,16 @@
-
-﻿using WebApi.Controllers;
 using WebApi.DataAccessLayer.Models;
 
-
-namespace WebApi.ServiceLayer;
+namespace WebApi.ServiceLayer.Interfaces;
 
 public interface IUserService
 {
-    ICollection<ReviewModel> GetReviews(string username);
-    UserModel GetById(int id);
-    IEnumerable<UserModel> GetAll();
-    UserModel GetByUsername(string username);
-    IEnumerable<ReviewModel> GetUserReviews(int userId);
-    UserModel Create(RegisterRequestDto model);
-    void Update(int id, RegisterRequestDto model);
-    void Delete(int id);
+    Task<IEnumerable<User?>> GetAll();
+    Task<User?> GetById(int id);
+    Task<User?> GetByUserName(string username);
+    Task Create(User model);
+    Task Update(User model);
+    Task Delete(int id);
+    Task<IEnumerable<Review>> GetReviews(string username);
+    Task SignUp(string username,string password);
+    Task<User?> LogIn(string username, string password);
 }

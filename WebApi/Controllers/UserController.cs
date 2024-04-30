@@ -1,93 +1,129 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using UserInterface.JwtLayer;
-using WebApi.DataAccessLayer;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.Data;
 using WebApi.DataAccessLayer.Models;
-using WebApi.ServiceLayer;
+using WebApi.ServiceLayer.DTOs;
+using WebApi.ServiceLayer.Interfaces;
 
-namespace WebApi.Controllers;
-
-public class LoginResponseDto
+namespace WebApi.Controllers
 {
-    public string Token { get; set; }
-}
-
-public class RegisterRequestDto
-{
-    public string UserEmail { get; set; }
-    public string Password { get; set; }
-    public string[] Roles { get; set; }
-}
-
-[Route("api/[controller]")]
-[ApiController]
-public class UserController : ControllerBase
-{
-    private readonly IUserService _userService;
-    private readonly IJwtService _jwtService;
-
-    public UserController(IUserService userService, IJwtService jwtService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
     {
-        _userService = userService;
-        _jwtService = jwtService;
-    }
+        private readonly IUserService _userService;
 
-    [HttpGet]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<IEnumerable<UserModel>> Get()
-    {
-        var users = _userService.GetAll();
-        return Ok(users);
-    }
-
-    [HttpGet("{id}")]
-    [Authorize(Roles = "Admin")]
-    public ActionResult<UserModel> Get(int id)
-    {
-        var user = _userService.GetById(id);
-        if (user == null)
-            return NotFound();
-        return Ok(user);
-    }
-
-    [HttpPost]
-    [AllowAnonymous]
-    public ActionResult<UserModel> Post(RegisterRequestDto model)
-    {
-        var user = _userService.Create(model);
-        return Ok(user);
-    }
-
-    [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
-    public IActionResult Put(int id, RegisterRequestDto model)
-    {
-        try
+        public UserController(IUserService userService)
         {
-            _userService.Update(id, model);
-            return NoContent();
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
-        catch (ArgumentException ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
 
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
-    public IActionResult Delete(int id)
-    {
-        try
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
-            _userService.Delete(id);
-            return NoContent();
+            var users = await _userService.GetAll();
+            return Ok(users);
         }
-        catch (ArgumentException ex)
+
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<User>> GetById(int id)
         {
-            return NotFound(ex.Message);
+            var user = await _userService.GetById(id);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpGet("ByUsername/{username}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<User>> GetByUserName(string username)
+        {
+            var user = await _userService.GetByUserName(username);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Create(User model)
+        {
+            await _userService.Create(model);
+            return CreatedAtAction(nameof(GetById), new { id = model.Id }, model);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(User model)
+        {
+            try
+            {
+                await _userService.Update(model);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _userService.Delete(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("SignUp")]
+        public async Task<IActionResult> SignUp([FromBody] UserDto request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest(new { message = "Username and password are required fields." });
+            }
+
+            try
+            {
+                await _userService.SignUp(request.Username, request.Password);
+                return Ok(new { message = "User created successfully" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = "Something went wrong! Please try again!" });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("LogIn")]
+        public async Task<IActionResult> LogIn(UserDto request)
+        {
+            try
+            {
+                var user = await _userService.LogIn(request.Username, request.Password);
+                if (user == null)
+                    return BadRequest(new { message = "Invalid username or password." });
+
+                // Return more secure token or user info here.
+                return Ok(new { message = "Logged in successfully" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
         }
     }
 }

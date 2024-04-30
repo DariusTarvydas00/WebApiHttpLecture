@@ -1,19 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using WebApi.ServiceLayer.DTOs;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
+﻿using WebApi.ServiceLayer.DTOs;
 
-namespace WebApi.ServiceLayer
+namespace WebApi.ServiceLayer.Interfaces
 {
     public interface IBookService
     {
-        Task<IEnumerable<BookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending);
+        public Task<IEnumerable<BookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending);
 
-        Task<BookDto> GetBookByIdAsync(int bookId);
-        Task<IEnumerable<ReviewDto>> GetReviewsByBookId(int bookId);
-        Task<BookDto> AddBookAsync(AddBookDto addBookDto);
-        Task<BookDto> UpdateBookAsync(int bookId, UpdateBookDto updateBookDto);
-        Task<bool> DeleteBookAsync(int bookId);
+        public Task<BookDto> GetBookByIdAsync(int bookId);
+        public Task<IEnumerable<ReviewDto>> GetReviewsByBookId(int bookId);
+        public Task<BookDto> AddBookAsync(AddBookDto addBookDto);
+        public Task<BookDto> UpdateBookAsync(int bookId, UpdateBookDto updateBookDto);
+        public Task<bool> DeleteBookAsync(int bookId);
     }
 }

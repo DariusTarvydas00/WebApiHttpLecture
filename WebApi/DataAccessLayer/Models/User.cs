@@ -5,7 +5,7 @@ namespace WebApi.DataAccessLayer.Models
 {
 
     [Table("Users")]
-    public class UserModel
+    public class User
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -24,10 +24,10 @@ namespace WebApi.DataAccessLayer.Models
         public byte[] PasswordSalt { get; set; }
 
         [StringLength(50)]
-        public string Role { get; set; }
+        public string? Role { get; set; }
 
 
-        public virtual ICollection<ReviewModel> Reviews { get; set; } = new HashSet<ReviewModel>();
+        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }
 }
 

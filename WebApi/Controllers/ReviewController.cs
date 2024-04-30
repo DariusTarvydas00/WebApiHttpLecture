@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DataAccessLayer.Models;
 using WebApi.ServiceLayer;
+using WebApi.ServiceLayer.Interfaces;
 
 namespace WebApi.Controllers;
 
@@ -17,7 +17,7 @@ public class ReviewController : ControllerBase
         _reviewService = reviewService;
     }
     [HttpPost]
-    public IActionResult AddReview([FromBody] ReviewModel review)
+    public IActionResult AddReview([FromBody] Review review)
     {
         try
         {

@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 using WebApi.ServiceLayer.DTOs;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using WebApi.ServiceLayer.Interfaces;
 
 namespace WebApi.ServiceLayer
 {
@@ -89,7 +83,7 @@ namespace WebApi.ServiceLayer
 
         public async Task<BookDto> AddBookAsync(AddBookDto addBookDto)
         {
-            var book = _mapper.Map<BookModel>(addBookDto);
+            var book = _mapper.Map<Book>(addBookDto);
             await _bookRepository.AddBookAsync(book);
             var bookDto = _mapper.Map<BookDto>(book);
             return bookDto;

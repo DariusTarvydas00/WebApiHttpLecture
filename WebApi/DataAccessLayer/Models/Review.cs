@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.DataAccessLayer.Models
 {
-    public class ReviewModel
+    public class Review
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }  // Foreign key for UserModel
+        public int UserId { get; set; }  // Foreign key for User
 
         [Required]
-        public int BookId { get; set; }  // Foreign key for BookModel
+        public int BookId { get; set; }  // Foreign key for Book
 
         [Required]
         [StringLength(1000)]
@@ -25,9 +25,9 @@ namespace WebApi.DataAccessLayer.Models
 
         // Navigation properties to link to the user and the book
         [ForeignKey("UserId")]
-        public virtual UserModel User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey("BookId")]
-        public virtual BookModel Book { get; set; }
+        public virtual Book Book { get; set; }
     }
 }

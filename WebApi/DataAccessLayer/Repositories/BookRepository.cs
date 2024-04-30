@@ -1,12 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApi.DataAccessLayer;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 
-namespace WebApi.RepositoryLayer
+namespace WebApi.DataAccessLayer.Repositories
 {
     public class BookRepository : IBookRepository
     {
@@ -17,7 +13,7 @@ namespace WebApi.RepositoryLayer
             _context = context;
         }
 
-        public IQueryable<BookModel> GetAllBooksQueryable()
+        public IQueryable<Book> GetAllBooksQueryable()
         {
 
             return _context.Books
@@ -25,12 +21,12 @@ namespace WebApi.RepositoryLayer
                 .AsQueryable();
         }
 
-        public async Task<BookModel> GetBookByIdAsync(int bookId)
+        public async Task<Book> GetBookByIdAsync(int bookId)
         {
             return await _context.Books.Include(b => b.Reviews).FirstOrDefaultAsync(b => b.Id == bookId);
         }
 
-        public async Task<IEnumerable<ReviewModel>> GetReviewsByBookId(int bookId)
+        public async Task<IEnumerable<Review>> GetReviewsByBookId(int bookId)
         {
             return await _context.Reviews.Where(r => r.BookId == bookId)
                 .Include(r => r.User)
@@ -38,13 +34,13 @@ namespace WebApi.RepositoryLayer
                 .ToListAsync();
         }
 
-        public async Task AddBookAsync(BookModel book)
+        public async Task AddBookAsync(Book book)
         {
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateBookAsync(BookModel book)
+        public async Task UpdateBookAsync(Book book)
         {
             _context.Books.Update(book);
             await _context.SaveChangesAsync();

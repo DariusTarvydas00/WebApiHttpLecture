@@ -1,10 +1,10 @@
 ﻿using WebApi.DataAccessLayer.Models;
 
-namespace WebApi.ServiceLayer;
+namespace WebApi.ServiceLayer.Interfaces;
 
 public interface IReviewService
 {
-    ReviewModel CreateNewReview(ReviewModel review);
-    List<ReviewModel> GetAllReviewsByBookId(int bookId);
-    public ReviewModel RemoveReview(int reviewId);
+    public Review CreateNewReview(Review review);
+    public List<Review> GetAllReviewsByBookId(int bookId);
+    public Review RemoveReview(int reviewId);
 }

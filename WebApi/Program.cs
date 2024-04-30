@@ -11,10 +11,10 @@ using WebApi.DataAccessLayer.Repositories;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 using WebApi.ServiceLayer;
 using Microsoft.AspNetCore.Http;
-using UserInterface.JwtLayer;
 using WebApi.Mappings;
+using WebApi.ServiceLayer.Interfaces;
+using WebApi.ServiceLayer.JwtLayer;
 //using WebApi.DataAccessLayer.Repositories;
-using WebApi.RepositoryLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 

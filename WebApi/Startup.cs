@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using UserInterface.JwtLayer;
 using WebApi.DataAccessLayer;
-
 using WebApi.DataAccessLayer.Repositories;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
-using WebApi.RepositoryLayer;
 using WebApi.ServiceLayer;
+using WebApi.ServiceLayer.Interfaces;
+using WebApi.ServiceLayer.JwtLayer;
 
-namespace UserInterface
+namespace WebApi
 {
     public class Startup(IConfiguration configuration)
     {
@@ -23,7 +22,7 @@ namespace UserInterface
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "CabalManagement.WebApi", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi.Web", Version = "v1" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Scheme = "Bearer",

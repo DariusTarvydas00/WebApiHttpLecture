@@ -1,15 +1,17 @@
-﻿using WebApi.DataAccessLayer.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebApi.DataAccessLayer.Models;
 
-namespace WebApi.DataAccessLayer.Repositories.Interfaces;
-
-public interface IUserRepository
+namespace WebApi.DataAccessLayer.Repositories.Interfaces
 {
-    UserModel GetById(int id);
-    UserModel GetByUsername(string username);
-    IEnumerable<ReviewModel> GetUserReviews(int userId);
-    IEnumerable<UserModel> GetAll();
-    UserModel Add(UserModel user);
-    void Update(UserModel user);
-    void Delete(UserModel user);
-    void SaveChanges();
+    public interface IUserRepository
+    {
+        Task<IEnumerable<User>> GetAll();
+        Task<User> GetById(int id);
+        Task<User> GetByUserName(string username);
+        Task Delete(int id);
+        Task<IEnumerable<Review>> GetUserReviews(int userId);
+        Task Create(User user);
+        Task Update(User user);
+    }
 }

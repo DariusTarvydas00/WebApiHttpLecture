@@ -6,11 +6,11 @@ namespace WebApi.DataAccessLayer.Repositories.Interfaces
 {
     public interface IBookRepository
     {
-        IQueryable<BookModel> GetAllBooksQueryable();
-        Task<BookModel> GetBookByIdAsync(int bookId);
-        Task<IEnumerable<ReviewModel>> GetReviewsByBookId(int bookId);
-        Task AddBookAsync(BookModel book);
-        Task UpdateBookAsync(BookModel book);
-        Task<bool> DeleteBookAsync(int bookId);
+        public IQueryable<Book> GetAllBooksQueryable();
+        public Task<Book> GetBookByIdAsync(int bookId);
+        public Task<IEnumerable<Review>> GetReviewsByBookId(int bookId);
+        public Task AddBookAsync(Book book);
+        public Task UpdateBookAsync(Book book);
+        public Task<bool> DeleteBookAsync(int bookId);
     }
 }

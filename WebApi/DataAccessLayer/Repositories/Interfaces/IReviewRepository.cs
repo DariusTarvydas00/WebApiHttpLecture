@@ -4,10 +4,10 @@ namespace WebApi.DataAccessLayer.Repositories.Interfaces;
 
 public interface IReviewRepository
 {
-    ReviewModel CreateReview(ReviewModel review);
-    List<ReviewModel> GetAllReviews();
-    ReviewModel RemoveReview(int reviewToDeleteId);
-    List<ReviewModel> GetReviewsByBookId(int bookId);
+    public Review CreateReview(Review review);
+    public List<Review> GetAllReviews();
+    public Review RemoveReview(int reviewToDeleteId);
+    public List<Review> GetReviewsByBookId(int bookId);
 
 
 }

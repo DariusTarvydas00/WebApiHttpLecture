@@ -1,5 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-using WebApi.DataAccessLayer.Models;
+﻿using WebApi.DataAccessLayer.Models;
 using WebApi.ServiceLayer.DTOs;
 using AutoMapper;
 
@@ -9,16 +8,16 @@ namespace WebApi.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<BookModel, BookDto>()
+            CreateMap<Book, BookDto>()
                 .ForMember(dest => dest.AverageRating, opt => opt.Ignore())
                .ForMember(dest => dest.ReviewCount, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<BookModel, AddBookDto>()
+            CreateMap<Book, AddBookDto>()
                 .ReverseMap();
-            CreateMap<BookModel, UpdateBookDto>()
+            CreateMap<Book, UpdateBookDto>()
                 .ReverseMap();
 
-            CreateMap<ReviewModel, ReviewDto>()
+            CreateMap<Review, ReviewDto>()
                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
                .ForMember(dest => dest.ReviewText, opt => opt.MapFrom(src => src.ReviewText))

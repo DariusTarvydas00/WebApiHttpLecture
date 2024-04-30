@@ -1,58 +1,68 @@
-﻿using WebApi.DataAccessLayer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 
-namespace WebApi.DataAccessLayer.Repositories;
-
-public class UserRepository : IUserRepository
+namespace WebApi.DataAccessLayer.Repositories
 {
-    private readonly MainDbContext _userContext;
-
-    public UserRepository(MainDbContext userContext)
+    public class UserRepository : IUserRepository
     {
-        _userContext = userContext;
-    }
+        private readonly MainDbContext _userContext;
 
-    public UserModel GetById(int id)
-    {
-        return _userContext.Users.Find(id);
-    }
+        public UserRepository(MainDbContext userContext)
+        {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
+        }
 
-    public UserModel GetByUsername(string username)
-    {
-        return _userContext.Users.FirstOrDefault(u => u.Username == username);
-    }
-    public IEnumerable<ReviewModel> GetUserReviews(int userId)
-    {
-        return _userContext.Reviews.Where(r => r.UserId == userId).ToList();
-    }
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await _userContext.Users.ToListAsync();
+        }
 
+        public async Task<User?> GetById(int id)
+        {
+            return await _userContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+        }
 
-    public IEnumerable<UserModel> GetAll()
-    {
-        return _userContext.Users.ToList();
-    }
+        public async Task<User?> GetByUserName(string username)
+        {
+            return await _userContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
 
-    public UserModel Add(UserModel user)
-    {
-        _userContext.Users.Add(user);
-        _userContext.SaveChanges();
-        return user;
-    }
+        public async Task<IEnumerable<Review>> GetUserReviews(int userId)
+        {
+            // Implement logic to retrieve user reviews from the database
+            return await _userContext.Reviews.Where(r => r.UserId == userId).ToListAsync();
+        }
 
-    public void Update(UserModel user)
-    {
-        _userContext.Users.Update(user);
-        _userContext.SaveChanges();
-    }
+        public async Task Create(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
 
-    public void Delete(UserModel user)
-    {
-        _userContext.Users.Remove(user);
-        _userContext.SaveChanges();
-    }
+            _userContext.Users.Add(user);
+            await _userContext.SaveChangesAsync();
+        }
 
-    public void SaveChanges()
-    {
-        _userContext.SaveChanges();
+        public async Task Update(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            _userContext.Users.Update(user);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task Delete(int id)
+        {
+            var userToDelete = await _userContext.Users.FindAsync(id);
+            if (userToDelete != null)
+            {
+                _userContext.Users.Remove(userToDelete);
+                await _userContext.SaveChangesAsync();
+            }
+        }
     }
 }
