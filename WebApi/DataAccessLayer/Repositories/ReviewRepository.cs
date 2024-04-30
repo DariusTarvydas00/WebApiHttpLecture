@@ -1,4 +1,7 @@
-﻿using WebApi.DataAccessLayer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Xml.Linq;
+using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 
 namespace WebApi.DataAccessLayer.Repositories;
@@ -52,5 +55,49 @@ public class ReviewRepository : IReviewRepository
     public List<Review> GetReviewsByUser(int userId)
     {
         return _mainDbContext.Reviews.Where(r => r.UserId == userId).ToList();
+    }
+
+    public async Task<Review> CreateReviewAsync(Review review)
+    {
+        _mainDbContext.Reviews.Add(review);
+        await _mainDbContext.SaveChangesAsync();
+        return review;
+
+    }
+
+    IQueryable<Review> IReviewRepository.GetReviews()
+    {
+        return _mainDbContext.Reviews
+            .Include(r => r.Reviews)
+            .AsQueryable();
+    }
+
+    public async Task<bool> DeleteReviewAsync(int reviewToDeleteId)
+    {
+        var review = await _mainDbContext.Reviews.FindAsync(reviewToDeleteId);
+        if (review != null)
+        {
+            _mainDbContext.Reviews.Remove(review);
+            await _mainDbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
+
+    public async Task<IEnumerable<Review>> GetReviewsByBookIdAsync(int bookId)
+    {
+        return await _mainDbContext.Reviews.Where(r => r.BookId == bookId)
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Review>> GetReviewsByUserIdAsync(int userId)
+    {
+        return await _mainDbContext.Reviews.Where(r => r.UserId == userId)
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .ToListAsync();
+
     }
 }
