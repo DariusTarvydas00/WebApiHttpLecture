@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}/reviews")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsByBookId(int id)
         {
-            var reviews = await _bookService.GetReviewsByBookId(id);
+            var reviews = await _bookService.GetReviewsByBookIdAsync(id);
             if (reviews == null || !reviews.Any())
             {
                 return NotFound($"No reviews found for the book with ID {id}.");

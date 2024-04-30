@@ -31,12 +31,6 @@ namespace WebApi.DataAccessLayer.Repositories
             return await _userContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        //public async Task<IEnumerable<Review>> GetUserReviews(int userId)
-        //{
-        //    // Implement logic to retrieve user reviews from the database
-        //    return await _userContext.Reviews.Where(r => r.UserId == userId).ToListAsync();
-        //}
-
         public async Task Create(User user)
         {
             if (user == null)

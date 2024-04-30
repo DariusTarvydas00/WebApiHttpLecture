@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Moq;
-using Xunit;
-using System.Threading.Tasks;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 using WebApi.ServiceLayer.DTOs;
@@ -58,7 +56,7 @@ namespace WebApiTestProject.ServiceLayerTests
             _mockMapper.Setup(x => x.Map<IEnumerable<ReviewDto>>(reviews)).Returns(reviewDtos);
 
             // Act
-            var result = await _service.GetReviewsByBookId(1);
+            var result = await _service.GetReviewsByBookIdAsync(1);
 
             // Assert
             Assert.NotNull(result);

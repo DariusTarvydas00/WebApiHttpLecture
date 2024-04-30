@@ -10,7 +10,6 @@ namespace WebApi.DataAccessLayer.Repositories.Interfaces
         Task<User> GetById(int id);
         Task<User> GetByUserName(string username);
         Task Delete(int id);
-        Task<IEnumerable<Review>> GetUserReviews(int userId);
         Task Create(User user);
         Task Update(User user);
     }
