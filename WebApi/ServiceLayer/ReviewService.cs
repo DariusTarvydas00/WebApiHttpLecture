@@ -29,5 +29,9 @@ public class ReviewService : IReviewService
         return _reviewRepository.RemoveReview(reviewId);
     }
 
+    public async Task<List<Review>> GetReviewsByUser(int userId)
+    {
+        return await Task.FromResult(_reviewRepository.GetReviewsByUser(userId));
+    }
 
 }
