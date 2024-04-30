@@ -97,7 +97,7 @@ namespace WebApi.Controllers
 
             try
             {
-                await _userService.SignUp(request.Username, request.Password, request.Email);
+                await _userService.SignUp(request.Username, request.Password, request.Email, request.Role);
                 return Ok(new { message = "User created successfully" });
             }
             catch (Exception e)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DataAccessLayer.Models;
-using WebApi.ServiceLayer;
 using WebApi.ServiceLayer.Interfaces;
 
 namespace WebApi.Controllers;

@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Accord.IO;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApi.DataAccessLayer.Models;
 
 namespace WebApi.DataAccessLayer

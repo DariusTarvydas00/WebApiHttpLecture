@@ -49,14 +49,14 @@ namespace WebApi.ServiceLayer
         }
 
         //public async Task SignUp(string username, string password, string email)
-        public async Task SignUp(string username, string password, string email)
+        public async Task SignUp(string username, string password, string email,string role)
         {
             var usr = await _userRepository.GetByUserName(username);
             if (usr != null)
             {
                 throw new InvalidOperationException("Username already exists. Please choose a different one.");
             }
-            var user = CreateUser(username, password, email);
+            var user = CreateUser(username, password, email, role);
             await _userRepository.Create(user);
         }
 
@@ -77,7 +77,7 @@ namespace WebApi.ServiceLayer
             return computedHash.SequenceEqual(storedHash);
         }
 
-        private User CreateUser(string username, string password, string email)
+        private User CreateUser(string username, string password, string email, string role)
         {
             CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
             var user = new User
@@ -86,7 +86,7 @@ namespace WebApi.ServiceLayer
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Email = email,
-                Role = "Admin"
+                Role = role
             };
             return user;
         }
