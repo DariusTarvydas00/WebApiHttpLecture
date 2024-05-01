@@ -7,10 +7,6 @@ namespace WebApi.DataAccessLayer.Models
 {
     public class Book
     {
-        //[Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int Id { get; set; }
-
         [Key]
         [StringLength(10)]
         public string ISBN { get; set; }
