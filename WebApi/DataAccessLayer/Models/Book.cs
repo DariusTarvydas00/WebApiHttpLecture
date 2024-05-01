@@ -21,6 +21,17 @@ namespace WebApi.DataAccessLayer.Models
         [Required]
         public int PublicationYear { get; set; }
 
+        [StringLength(13)]
+        public string? ISBN { get; set; }
+
+        public string? Publisher { get; set; }
+
+        public string? Image_URL_S { get; set; }
+
+        public string? Image_URL_M { get; set; }
+
+        public string? Image_URL_L { get; set; }
+
         // Initialize the collection of reviews in the constructor to avoid null references
         public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }

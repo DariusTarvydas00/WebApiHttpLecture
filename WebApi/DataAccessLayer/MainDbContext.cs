@@ -23,31 +23,31 @@ namespace WebApi.DataAccessLayer
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
-            // Configure the User-Review relationship
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Reviews)
-                .WithOne(r => r.User)
-                .HasForeignKey(r => r.UserId)
-                .IsRequired();
+            //// Configure the User-Review relationship
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.Reviews)
+            //    .WithOne(r => r.User)
+            //    .HasForeignKey(r => r.UserId)
+            //    .IsRequired();
 
-            // Configure the Book-Review relationship
-            modelBuilder.Entity<Book>()
-                .HasMany(b => b.Reviews)
-                .WithOne(r => r.Book)
-                .HasForeignKey(r => r.BookId)
-                .IsRequired();
+            //// Configure the Book-Review relationship
+            //modelBuilder.Entity<Book>()
+            //    .HasMany(b => b.Reviews)
+            //    .WithOne(r => r.Book)
+            //    .HasForeignKey(r => r.BookId)
+            //    .IsRequired();
 
-            // Additional configurations for User
-            modelBuilder.Entity<User>()
-                .ToTable("Users")
-                .HasIndex(u => u.Email) // Assuming email should be unique and indexed
-                .IsUnique();
+            //// Additional configurations for User
+            //modelBuilder.Entity<User>()
+            //    .ToTable("Users")
+            //    .HasIndex(u => u.Email) // Assuming email should be unique and indexed
+            //    .IsUnique();
 
-            // Additional configurations for Book
-            modelBuilder.Entity<Book>()
-                .ToTable("Books");
+            //// Additional configurations for Book
+            //modelBuilder.Entity<Book>()
+            //    .ToTable("Books");
         }
     }
 }

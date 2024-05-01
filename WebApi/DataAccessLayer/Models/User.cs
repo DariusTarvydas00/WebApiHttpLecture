@@ -15,7 +15,6 @@ namespace WebApi.DataAccessLayer.Models
         [StringLength(100)]
         public string Username { get; set; }
 
-
         [EmailAddress]
         [StringLength(100)]
         public string Email { get; set; }
@@ -25,7 +24,10 @@ namespace WebApi.DataAccessLayer.Models
 
         [StringLength(50)]
         public string? Role { get; set; }
+        public string? Location { get; set; }
 
+        [StringLength(3)]
+        public string? Age { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
     }
