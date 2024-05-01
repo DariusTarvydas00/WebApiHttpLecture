@@ -85,7 +85,10 @@ namespace WebApi.ServiceLayer
         public async Task<ResponseBookDto> UpdateBookAsync(string isbn, RequestBookDto requestBookDto)
         {
             var book = await _bookRepository.GetBookByIdAsync(isbn);
-            if (book == null) return null;
+            if (book == null)
+            {
+                return null;
+            }
             _mapper.Map(requestBookDto, book);
             await _bookRepository.UpdateBookAsync(book);
             return _mapper.Map<ResponseBookDto>(book);
