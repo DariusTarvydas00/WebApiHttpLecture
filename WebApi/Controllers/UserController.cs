@@ -20,7 +20,7 @@ namespace WebApi.Controllers
             _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> GetById(int id)
         {
@@ -39,9 +39,9 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpGet("ByUsername/{username}")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<User>> GetByUserName(string username)
+        public async Task<ActionResult<User>> GetByUserName([FromQuery] string username)
         {
             var user = await _userService.GetByUserName(username);
             if (user == null)

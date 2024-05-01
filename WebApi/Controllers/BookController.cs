@@ -17,17 +17,17 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetAllBooks(string? title = null, string? author = null, string? keyword = null, bool? sortByRatingAscending = null, bool? sortByYearAscending = null, bool? sortByReviewsAscending = null)
+        public async Task<ActionResult<IEnumerable<ResponseBookDto>>> GetAllBooks(string? title = null, string? author = null, string? keyword = null, bool? sortByRatingAscending = null, bool? sortByYearAscending = null, bool? sortByReviewsAscending = null)
         {
             var books = await _bookService.GetAllBooksAsync(title, author, keyword, sortByRatingAscending, sortByYearAscending, sortByReviewsAscending);
             return Ok(books);
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BookDto>> GetBookById(int id)
+        [HttpGet("{isbn}")]
+        public async Task<ActionResult<ResponseBookDto>> GetBookById(string isbn)
         {
-            var book = await _bookService.GetBookByIdAsync(id);
+            var book = await _bookService.GetBookByIdAsync(isbn);
             if (book == null)
             {
                 return NotFound();
@@ -35,48 +35,44 @@ namespace WebApi.Controllers
             return Ok(book);
         }
 
-        [HttpGet("{id}/reviews")]
-        public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsByBookId(int id)
-        {
-            var reviews = await _bookService.GetReviewsByBookIdAsync(id);
-            if (reviews == null || !reviews.Any())
-            {
-                return NotFound($"No reviews found for the book with ID {id}.");
-            }
-            return Ok(reviews);
-        }
+        //[HttpGet("{id}/reviews")]
+        //public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsByBookId(int id)
+        //{
+        //    var reviews = await _bookService.GetReviewsByBookIdAsync(id);
+        //    if (reviews == null || !reviews.Any())
+        //    {
+        //        return NotFound($"No reviews found for the book with ID {id}.");
+        //    }
+        //    return Ok(reviews);
+        //    throw new System.NotImplementedException();
+        //}
 
         [HttpPost]
-        public async Task<ActionResult<BookDto>> AddBook([FromBody] AddBookDto addBookDto)
+        public async Task<ActionResult<ResponseBookDto>> AddBook([FromBody] RequestBookDto requestBookDto)
         {
-            var newBook = await _bookService.AddBookAsync(addBookDto);
-            return CreatedAtAction(nameof(GetBookById), new { id = newBook.Id }, newBook);
+            var newBook = await _bookService.AddBookAsync(requestBookDto);
+            return CreatedAtAction(nameof(GetBookById), new { id = newBook.ISBN }, newBook);
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] UpdateBookDto updateBookDto)
+        [HttpPut("{isbn}")]
+        public async Task<IActionResult> UpdateBook(string isbn, [FromBody] RequestBookDto requestBookDto)
         {
-
-            var updatedBook = await _bookService.UpdateBookAsync(id, updateBookDto);
+            var updatedBook = await _bookService.UpdateBookAsync(isbn, requestBookDto);
             if (updatedBook == null)
             {
                 return NotFound();
             }
-
             return NoContent();
         }
 
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        [HttpDelete("{isbn}")]
+        public async Task<IActionResult> DeleteBook(string isbn)
         {
-            var success = await _bookService.DeleteBookAsync(id);
+            var success = await _bookService.DeleteBookAsync(isbn);
             if (!success)
             {
                 return NotFound();
             }
-
             return NoContent();
         }
     }

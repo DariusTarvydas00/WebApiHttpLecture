@@ -25,10 +25,10 @@ namespace WebApiTestProject.ServiceLayerTests
         {
             // Arrange
             var book = new Book { Id = 1, Title = "Sample Book", Author = "Author", PublicationYear = 2020 };
-            var bookDto = new BookDto { Id = 1, Title = "Sample Book", Author = "Author", PublicationYear = 2020 };
+            var bookDto = new ResponseBookDto { Id = 1, Title = "Sample Book", Author = "Author", PublicationYear = 2020 };
 
             _mockRepo.Setup(x => x.GetBookByIdAsync(1)).ReturnsAsync(book);
-            _mockMapper.Setup(x => x.Map<BookDto>(book)).Returns(bookDto);
+            _mockMapper.Setup(x => x.Map<ResponseBookDto>(book)).Returns(bookDto);
 
             // Act
             var result = await _service.GetBookByIdAsync(1);
@@ -68,16 +68,16 @@ namespace WebApiTestProject.ServiceLayerTests
         public async Task AddBookAsync_ReturnsBookDto_WhenBookIsAdded()
         {
             // Arrange
-            var addBookDto = new AddBookDto { Title = "New Book", Author = "New Author", PublicationYear = 2021 };
+            var requestBookDto = new RequestBookDto { Title = "New Book", Author = "New Author", PublicationYear = 2021 };
             var book = new Book { Id = 1, Title = "New Book", Author = "New Author", PublicationYear = 2021 };
-            var bookDto = new BookDto { Id = 1, Title = "New Book", Author = "New Author", PublicationYear = 2021 };
+            var bookDto = new ResponseBookDto { Id = 1, Title = "New Book", Author = "New Author", PublicationYear = 2021 };
 
-            _mockMapper.Setup(m => m.Map<Book>(addBookDto)).Returns(book);
-            _mockMapper.Setup(m => m.Map<BookDto>(book)).Returns(bookDto);
+            _mockMapper.Setup(m => m.Map<Book>(requestBookDto)).Returns(book);
+            _mockMapper.Setup(m => m.Map<ResponseBookDto>(book)).Returns(bookDto);
             _mockRepo.Setup(r => r.AddBookAsync(book)).Returns(Task.CompletedTask);
 
             // Act
-            var result = await _service.AddBookAsync(addBookDto);
+            var result = await _service.AddBookAsync(requestBookDto);
 
             // Assert
             Assert.NotNull(result);
@@ -89,16 +89,16 @@ namespace WebApiTestProject.ServiceLayerTests
         {
             // Arrange
             var book = new Book { Id = 1, Title = "Old Title", Author = "Author", PublicationYear = 2020 };
-            var updateBookDto = new UpdateBookDto { Title = "Updated Title", Author = "Author", PublicationYear = 2020 };
-            var updatedBookDto = new BookDto { Id = 1, Title = "Updated Title", Author = "Author", PublicationYear = 2020 };
+            var requestBookDto = new RequestBookDto { Title = "Updated Title", Author = "Author", PublicationYear = 2020 };
+            var updatedBookDto = new ResponseBookDto { Id = 1, Title = "Updated Title", Author = "Author", PublicationYear = 2020 };
 
             _mockRepo.Setup(x => x.GetBookByIdAsync(1)).ReturnsAsync(book);
             _mockRepo.Setup(x => x.UpdateBookAsync(book)).Returns(Task.CompletedTask);
-            _mockMapper.Setup(x => x.Map(updateBookDto, book)).Returns(book);
-            _mockMapper.Setup(x => x.Map<BookDto>(book)).Returns(updatedBookDto);
+            _mockMapper.Setup(x => x.Map(requestBookDto, book)).Returns(book);
+            _mockMapper.Setup(x => x.Map<ResponseBookDto>(book)).Returns(updatedBookDto);
 
             // Act
-            var result = await _service.UpdateBookAsync(1, updateBookDto);
+            var result = await _service.UpdateBookAsync(1, requestBookDto);
 
             // Assert
             Assert.NotNull(result);

@@ -21,17 +21,9 @@ namespace WebApi.DataAccessLayer.Repositories
                 .AsQueryable();
         }
 
-        public async Task<Book> GetBookByIdAsync(int bookId)
+        public async Task<Book> GetBookByIdAsync(string isbn)
         {
-            return await _context.Books.Include(b => b.Reviews).FirstOrDefaultAsync(b => b.Id == bookId);
-        }
-
-        public async Task<IEnumerable<Review>> GetReviewsByBookId(int bookId)
-        {
-            return await _context.Reviews.Where(r => r.BookId == bookId)
-                .Include(r => r.User)
-                .Include(r => r.Book)
-                .ToListAsync();
+            return await _context.Books.Include(b => b.Reviews).FirstOrDefaultAsync(b => b.ISBN == isbn);
         }
 
         public async Task AddBookAsync(Book book)
@@ -46,9 +38,9 @@ namespace WebApi.DataAccessLayer.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteBookAsync(int bookId)
+        public async Task<bool> DeleteBookAsync(string isbn)
         {
-            var book = await _context.Books.FindAsync(bookId);
+            var book = await _context.Books.FindAsync(isbn);
             if (book != null)
             {
                 _context.Books.Remove(book);

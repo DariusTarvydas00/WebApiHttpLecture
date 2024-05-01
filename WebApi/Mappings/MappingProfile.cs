@@ -8,13 +8,11 @@ namespace WebApi.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Book, BookDto>()
+            CreateMap<Book, ResponseBookDto>()
                 .ForMember(dest => dest.AverageRating, opt => opt.Ignore())
-               .ForMember(dest => dest.ReviewCount, opt => opt.Ignore())
+                .ForMember(dest => dest.ReviewCount, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<Book, AddBookDto>()
-                .ReverseMap();
-            CreateMap<Book, UpdateBookDto>()
+            CreateMap<Book, RequestBookDto>()
                 .ReverseMap();
 
             CreateMap<Review, ReviewDto>()

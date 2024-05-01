@@ -7,10 +7,9 @@ namespace WebApi.DataAccessLayer.Repositories.Interfaces
     public interface IBookRepository
     {
         public IQueryable<Book> GetAllBooksQueryable();
-        public Task<Book> GetBookByIdAsync(int bookId);
-        public Task<IEnumerable<Review>> GetReviewsByBookId(int bookId);
+        public Task<Book> GetBookByIdAsync(string isbn);
         public Task AddBookAsync(Book book);
         public Task UpdateBookAsync(Book book);
-        public Task<bool> DeleteBookAsync(int bookId);
+        public Task<bool> DeleteBookAsync(string isbn);
     }
 }
