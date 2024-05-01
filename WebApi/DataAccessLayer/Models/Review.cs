@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebApi.DataAccessLayer.Models
 {
@@ -20,14 +21,16 @@ namespace WebApi.DataAccessLayer.Models
         public string ReviewText { get; set; }
 
         [Required]
-        [Range(1, 5)]
+        [Range(0, 10)]
         public int Rating { get; set; }  // Assuming a rating out of 5
 
         // Navigation properties to link to the user and the book
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        [JsonIgnore]
+        public virtual User? User { get; set; }
 
         [ForeignKey("BookId")]
-        public virtual Book Book { get; set; }
+        [JsonIgnore]
+        public virtual Book? Book { get; set; }
     }
 }
