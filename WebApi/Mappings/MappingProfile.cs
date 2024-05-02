@@ -19,6 +19,8 @@ namespace WebApi.Mappings
                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username))
                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
                .ForMember(dest => dest.ReviewText, opt => opt.MapFrom(src => src.ReviewText))
+               .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
+               .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.BookISBN))
                .ReverseMap();
 
 

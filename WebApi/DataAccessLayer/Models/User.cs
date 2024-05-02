@@ -20,11 +20,11 @@ namespace WebApi.DataAccessLayer.Models
 
         [EmailAddress]
         [StringLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public byte[] PasswordHash { get; set; }
+        public byte[]? PasswordHash { get; set; }
 
-        public byte[] PasswordSalt { get; set; }
+        public byte[]? PasswordSalt { get; set; }
 
         [StringLength(50)]
         public string? Role { get; set; }
