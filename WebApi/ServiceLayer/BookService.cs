@@ -23,10 +23,10 @@ namespace WebApi.ServiceLayer
             return _bookRepository.GetAllBooksQueryable();
         }
 
-        //public IQueryable<Book> GetUnratedBooksByUser()
-        //{
-        //    return 
-        //}
+        public double[] GetBookVector(string isbn)
+        {
+            return _bookRepository.GetBookVector(isbn);
+        }
 
         public async Task<IEnumerable<ResponseBookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending)
         {

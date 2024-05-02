@@ -47,9 +47,11 @@ namespace WebApi.ServiceLayer
             Cosine cosine = new Cosine();
 
             int userCount = (await _userService.GetAll()).Count();
+            
 
             foreach (var ratedBook in goodUserReviews)
             {
+                int loggingCounter = 0;
                 foreach (var unratedBook in emptyUserReviews)
                 {
                     //double[] ratedBookVector = (await _reviewService.GetReviewsByBookIdAsync(ratedBook.ISBN)).Select(r => (double)r.Rating).ToArray();
@@ -60,39 +62,44 @@ namespace WebApi.ServiceLayer
 
                     //var ratedBookReviews = await _reviewService.GetReviewsByBookIdEagerAsync(ratedBook.ISBN);
                     //var unratedBookReviews = await _reviewService.GetReviewsByBookIdEagerAsync(unratedBook.ISBN);
-                    
-                    
-                    var ratedBookReviews = ratedBook.Reviews;
-                    var unratedBookReviews = unratedBook.Reviews;
 
-                    double[] ratedBookVector = new double[userCount];
-                    double[] unratedBookVector = new double[userCount];
 
-                    for (int i = 0; i < userCount; i++)
-                    {
-                        var ratedReview = ratedBookReviews.FirstOrDefault(r => r.User.Id == i);
-                        var unratedReview = unratedBookReviews.FirstOrDefault(r => r.User.Id == i);
+                    //var ratedBookReviews = ratedBook.Reviews;
+                    //var unratedBookReviews = unratedBook.Reviews;
 
-                        if (ratedReview != null)
-                        {
-                            ratedBookVector[i] = ratedReview.Rating;
-                        }
-                        else
-                        {
-                            ratedBookVector[i] = 0;
-                        }
+                    //double[] ratedBookVector = new double[userCount];
+                    //double[] unratedBookVector = new double[userCount];
 
-                        if (unratedReview != null)
-                        {
-                            unratedBookVector[i] = unratedReview.Rating;
-                        }
-                        else
-                        {
-                            unratedBookVector[i] = 0;
-                        }
-                    }
+                    //for (int i = 0; i < userCount; i++)
+                    //{
+                    //    var ratedReview = ratedBookReviews.FirstOrDefault(r => r.User.Id == i);
+                    //    var unratedReview = unratedBookReviews.FirstOrDefault(r => r.User.Id == i);
 
-                    _logger.LogInformation(unratedBook.ISBN + "\n" + string.Join(' ',ratedBookVector));
+                    //    if (ratedReview != null)
+                    //    {
+                    //        ratedBookVector[i] = ratedReview.Rating;
+                    //    }
+                    //    else
+                    //    {
+                    //        ratedBookVector[i] = 0;
+                    //    }
+
+                    //    if (unratedReview != null)
+                    //    {
+                    //        unratedBookVector[i] = unratedReview.Rating;
+                    //    }
+                    //    else
+                    //    {
+                    //        unratedBookVector[i] = 0;
+                    //    }
+                    //}
+
+
+                    var ratedBookVector = _bookService.GetBookVector(ratedBook.ISBN);
+                    var unratedBookVector = _bookService.GetBookVector(unratedBook.ISBN);
+
+                    loggingCounter = loggingCounter + 1;
+                    _logger.LogInformation("rated: " + ratedBook.ISBN + "   unrated: " + unratedBook.ISBN + "   counter: " + loggingCounter);
 
                     double distance = Double.Round(cosine.Distance(ratedBookVector, unratedBookVector), 9);
                     if (bookDistances.Count < 5)
