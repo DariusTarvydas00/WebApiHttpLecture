@@ -9,10 +9,12 @@ namespace WebApi.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IReviewService _reviewService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IReviewService reviewService)
         {
             _bookService = bookService;
+            _reviewService = reviewService;
         }
 
 
@@ -38,7 +40,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}/reviews")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsByBookId(int id)
         {
-            var reviews = await _bookService.GetReviewsByBookIdAsync(id);
+            var reviews = await _reviewService.GetReviewsByBookIdAsync(id);
             if (reviews == null || !reviews.Any())
             {
                 return NotFound($"No reviews found for the book with ID {id}.");

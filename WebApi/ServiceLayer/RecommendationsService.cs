@@ -42,8 +42,10 @@ namespace WebApi.ServiceLayer
             {
                 foreach (var unratedBook in emptyUserReviews)
                 {
-                    double[] ratedBookVector = (await _bookService.GetReviewsByBookIdAsync(ratedBook.BookId)).Select(r => (double)r.Rating).ToArray();
-                    double[] unratedBookVector = (await _bookService.GetReviewsByBookIdAsync(unratedBook.BookId)).Select(r => (double)r.Rating).ToArray();
+                    //double[] ratedBookVector = (await _bookService.GetReviewsByBookIdAsync(ratedBook.BookId)).Select(r => (double)r.Rating).ToArray();
+                    //double[] unratedBookVector = (await _bookService.GetReviewsByBookIdAsync(unratedBook.BookId)).Select(r => (double)r.Rating).ToArray();
+                    double[] ratedBookVector = new double[1];
+                    double[] unratedBookVector = new double[1]; 
                     double distance = Double.Round(cosine.Distance(ratedBookVector, unratedBookVector), 9);
                     if (bookDistances.Count < 5)
                     {
