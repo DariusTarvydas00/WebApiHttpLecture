@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetRecommendations([FromQuery] string username)
         {
             if (string.IsNullOrEmpty(username))
