@@ -17,6 +17,7 @@ namespace WebApi.DataAccessLayer.Models
         public int UserId { get; set; }  // Foreign key for User
 
         [Required]
+        [StringLength(10)]
         public string BookISBN { get; set; }  // Foreign key for Book
 
         [StringLength(1000)]
