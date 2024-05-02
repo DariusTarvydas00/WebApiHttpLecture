@@ -3,44 +3,43 @@ using System.Text;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories.Interfaces;
 using WebApi.ServiceLayer.Interfaces;
-using WebApi.ServiceLayer.JwtLayer;
 
 namespace WebApi.ServiceLayer
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
 
-        public UserService(IUserRepository userRepository, IJwtService jwtService)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _jwtService = jwtService;
         }
         
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User?>> GetAll()
         {
             return await _userRepository.GetAll();
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
             return await _userRepository.GetById(id);
         }
 
-        public async Task<User> GetByUserName(string username)
+        public async Task<User?> GetByUserName(string username)
         {
             return await _userRepository.GetByUserName(username);
+        }
+
+        public async Task Update(int id,string username, string password, string email, string role)
+        {
+            var user = CreateUser(username, password, email, role);
+            user.Id = id;
+            await _userRepository.Update(user);
         }
 
         public async Task Create(User model)
         {
             await _userRepository.Create(model);
-        }
-
-        public async Task Update(User model)
-        {
-            await _userRepository.Update(model);
         }
         
         public async Task Delete(int id)
@@ -62,11 +61,7 @@ namespace WebApi.ServiceLayer
         public async Task<User?> LogIn(string username, string password)
         {
             var user = await _userRepository.GetByUserName(username);
-            if (user == null || !VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
-            {
-                return null;
-            }
-            return user;
+            return user is { PasswordSalt: not null, PasswordHash: not null } && !VerifyPassword(password, user.PasswordHash, user.PasswordSalt) ? null : user;
         }
         
         private bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt)

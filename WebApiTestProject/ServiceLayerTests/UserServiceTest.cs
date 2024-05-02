@@ -21,7 +21,7 @@ public class UserServiceTests
     {
         _mockUserRepository = new Mock<IUserRepository>();
         _mockJwtService = new Mock<IJwtService>();
-        _userService = new UserService(_mockUserRepository.Object, _mockJwtService.Object);
+        _userService = new UserService(_mockUserRepository.Object);
         _fixture = new Fixture();
     }
 
@@ -87,7 +87,7 @@ public class UserServiceTests
         var user = _fixture.Create<User>();
 
         // Act
-        await _userService.Update(user);
+        await _userService.Update(user.Id,user.Username,user.Email,user.Role,"");
 
         // Assert
         _mockUserRepository.Verify(repo => repo.Update(user), Times.Once);

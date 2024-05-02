@@ -18,12 +18,13 @@ public class JwtService : IJwtService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
-    
+        var audience = _config["Jwt:Audience"];
         // Define user claims including username and role
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, username),
-            new Claim(ClaimTypes.Role, role) // Add the role claim
+            new Claim(ClaimTypes.Role, role), // Add the role claim
+            new Claim(JwtRegisteredClaimNames.Aud, audience)
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
