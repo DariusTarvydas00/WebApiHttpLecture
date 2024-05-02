@@ -1,0 +1,16 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5bdb131b_002D7f44_002D4899_002Daca0_002D05c5a316dff3/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetById_WithInvalidId_ReturnsNotFoundResult" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::B57C791A-B17B-446F-A2B8-ADC3A88FB301::net8.0::WebApiTestProject.ControllerTests.UserControllerTests.GetById_WithInvalidId_ReturnsNotFoundResult&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ffb180b_002D733d_002D4347_002D988a_002D6d6728408e12/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="UserControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::B57C791A-B17B-446F-A2B8-ADC3A88FB301::net8.0::WebApiTestProject.ControllerTests.UserControllerTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=85638d26_002D9f73_002D4be8_002D90bb_002D3b45bab1ce2a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetAll_ReturnsOkObjectResult" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::B57C791A-B17B-446F-A2B8-ADC3A88FB301::net8.0::WebApiTestProject.ControllerTests.UserControllerTests.GetAll_ReturnsOkObjectResult&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
