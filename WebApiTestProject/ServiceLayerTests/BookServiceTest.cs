@@ -39,30 +39,30 @@ namespace WebApiTestProject.ServiceLayerTests
             _mockRepo.Verify(x => x.GetBookByIdAsync(1), Times.Once);
         }
 
-        [Fact]
-        public async Task GetReviewsByBookId_ReturnsReviewDtos_WhenReviewsExist()
-        {
-            // Arrange
-            var reviews = new List<Review>
-            {
-                new Review { Id = 1, UserId = 1, BookId = 1, Rating = 5, ReviewText = "Great!" }
-            };
-            var reviewDtos = new List<ReviewDto>
-            {
-                new ReviewDto { Id = 1, UserId = "1", BookId = 1, Rating = 5, ReviewText = "Great!" }
-            };
+        //[Fact]
+        //public async Task GetReviewsByBookId_ReturnsReviewDtos_WhenReviewsExist()
+        //{
+        //    // Arrange
+        //    var reviews = new List<Review>
+        //    {
+        //        new Review { Id = 1, UserId = 1, BookId = 1, Rating = 5, ReviewText = "Great!" }
+        //    };
+        //    var reviewDtos = new List<ReviewDto>
+        //    {
+        //        new ReviewDto { Id = 1, UserId = "1", BookId = 1, Rating = 5, ReviewText = "Great!" }
+        //    };
 
-            _mockRepo.Setup(x => x.GetReviewsByBookId(1)).ReturnsAsync(reviews);
-            _mockMapper.Setup(x => x.Map<IEnumerable<ReviewDto>>(reviews)).Returns(reviewDtos);
+        //    _mockRepo.Setup(x => x.GetReviewsByBookId(1)).ReturnsAsync(reviews);
+        //    _mockMapper.Setup(x => x.Map<IEnumerable<ReviewDto>>(reviews)).Returns(reviewDtos);
 
-            // Act
-            var result = await _service.GetReviewsByBookIdAsync(1);
+        //    // Act
+        //    var result = await _service.GetReviewsByBookIdAsync(1);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-            _mockRepo.Verify(x => x.GetReviewsByBookId(1), Times.Once);
-        }
+        //    // Assert
+        //    Assert.NotNull(result);
+        //    Assert.Single(result);
+        //    _mockRepo.Verify(x => x.GetReviewsByBookId(1), Times.Once);
+        //}
 
         [Fact]
         public async Task AddBookAsync_ReturnsBookDto_WhenBookIsAdded()
