@@ -57,7 +57,11 @@ namespace WebApi.ServiceLayer
                 Author = book.Author,
                 PublicationYear = book.PublicationYear,
                 AverageRating = book.Reviews.Any() ? book.Reviews.Average(r => r.Rating) : 0,
-                ReviewCount = book.Reviews.Count
+                ReviewCount = book.Reviews.Count,
+                Publisher = book.Publisher,
+                Image_URL_S = book.Image_URL_S,
+                Image_URL_M = book.Image_URL_M,
+                Image_URL_L = book.Image_URL_L
             });
 
 
