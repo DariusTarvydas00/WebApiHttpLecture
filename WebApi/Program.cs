@@ -92,6 +92,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IRecommendationsService, RecommendationsService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>

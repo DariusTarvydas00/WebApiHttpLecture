@@ -68,7 +68,7 @@ public class ReviewRepository : IReviewRepository
     IQueryable<Review> IReviewRepository.GetReviews()
     {
         return _mainDbContext.Reviews
-            .Include(r => r.Reviews)
+            .Include(r => r.Book)
             .AsQueryable();
     }
 
