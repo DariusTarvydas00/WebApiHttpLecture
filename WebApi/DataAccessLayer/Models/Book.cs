@@ -1,38 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebApi.DataAccessLayer.Models
 {
     public class Book
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        [StringLength(10)]
+        public string ISBN { get; set; }
 
         [Required]
-        [StringLength(255)]
+        [StringLength(300)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(150)]
         public string Author { get; set; }
 
         [Required]
         public int PublicationYear { get; set; }
 
-        [StringLength(13)]
-        public string? ISBN { get; set; }
-
+        [StringLength(150)]
         public string? Publisher { get; set; }
 
+        [StringLength(150)]
         public string? Image_URL_S { get; set; }
 
+        [StringLength(150)]
         public string? Image_URL_M { get; set; }
 
+        [StringLength(150)]
         public string? Image_URL_L { get; set; }
 
-        // Initialize the collection of reviews in the constructor to avoid null references
-        public virtual ICollection<Review> Reviews { get; set; } = new HashSet<Review>();
+        [JsonIgnore]
+        public virtual ICollection<Review>? Reviews { get; set; } = new HashSet<Review>();
     }
 }

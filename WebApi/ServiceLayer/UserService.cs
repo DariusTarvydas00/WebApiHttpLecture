@@ -48,7 +48,6 @@ namespace WebApi.ServiceLayer
             await _userRepository.Delete(id);
         }
 
-        //public async Task SignUp(string username, string password, string email)
         public async Task SignUp(string username, string password, string email,string role)
         {
             var usr = await _userRepository.GetByUserName(username);

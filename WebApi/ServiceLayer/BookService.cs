@@ -18,7 +18,17 @@ namespace WebApi.ServiceLayer
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending)
+        public IQueryable<Book> GetAllBooksQueryableAsync()
+        {
+            return _bookRepository.GetAllBooksQueryable();
+        }
+
+        //public IQueryable<Book> GetUnratedBooksByUser()
+        //{
+        //    return 
+        //}
+
+        public async Task<IEnumerable<ResponseBookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending)
         {
             var query = _bookRepository.GetAllBooksQueryable();
 
@@ -40,9 +50,9 @@ namespace WebApi.ServiceLayer
             var books = await query.Include(b => b.Reviews).ToListAsync();
 
 
-            var bookDtos = books.Select(book => new BookDto
+            var bookDtos = books.Select(book => new ResponseBookDto
             {
-                Id = book.Id,
+                ISBN = book.ISBN,
                 Title = book.Title,
                 Author = book.Author,
                 PublicationYear = book.PublicationYear,
@@ -68,38 +78,35 @@ namespace WebApi.ServiceLayer
         }
 
 
-        public async Task<BookDto> GetBookByIdAsync(int bookId)
+        public async Task<ResponseBookDto> GetBookByIdAsync(string isbn)
         {
-            var book = await _bookRepository.GetBookByIdAsync(bookId);
-            return book != null ? _mapper.Map<BookDto>(book) : null;
+            var book = await _bookRepository.GetBookByIdAsync(isbn);
+            return book != null ? _mapper.Map<ResponseBookDto>(book) : null;
         }
 
-        //public async Task<IEnumerable<ReviewDto>> GetReviewsByBookIdAsync(int bookId)
-        //{
-        //    var reviews = await _bookRepository.GetReviewsByBookId(bookId);
-        //    return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-        //}
-
-        public async Task<BookDto> AddBookAsync(AddBookDto addBookDto)
+        public async Task<ResponseBookDto> AddBookAsync(RequestBookDto requestBookDto)
         {
-            var book = _mapper.Map<Book>(addBookDto);
+            var book = _mapper.Map<Book>(requestBookDto);
             await _bookRepository.AddBookAsync(book);
-            var bookDto = _mapper.Map<BookDto>(book);
+            var bookDto = _mapper.Map<ResponseBookDto>(book);
             return bookDto;
         }
 
-        public async Task<BookDto> UpdateBookAsync(int bookId, UpdateBookDto updateBookDto)
+        public async Task<ResponseBookDto> UpdateBookAsync(string isbn, RequestBookDto requestBookDto)
         {
-            var book = await _bookRepository.GetBookByIdAsync(bookId);
-            if (book == null) return null;
-            _mapper.Map(updateBookDto, book);
+            var book = await _bookRepository.GetBookByIdAsync(isbn);
+            if (book == null)
+            {
+                return null;
+            }
+            _mapper.Map(requestBookDto, book);
             await _bookRepository.UpdateBookAsync(book);
-            return _mapper.Map<BookDto>(book);
+            return _mapper.Map<ResponseBookDto>(book);
         }
 
-        public async Task<bool> DeleteBookAsync(int bookId)
+        public async Task<bool> DeleteBookAsync(string isbn)
         {
-            return await _bookRepository.DeleteBookAsync(bookId);
+            return await _bookRepository.DeleteBookAsync(isbn);
         }
     }
 }

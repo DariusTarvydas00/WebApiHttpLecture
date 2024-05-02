@@ -20,15 +20,16 @@ public class ReviewService : IReviewService
         _mapper = mapper;
     }
 
+    public List<Review> GetAllReviewsByBookId(string isbn)
+    {
+        var reviews = _reviewRepository.GetReviewsByBookId(isbn);
+        return reviews;
+    }
+
     public Review CreateNewReview(Review review)
     {
         var newreview = _reviewRepository.CreateReview(review);
         return newreview;
-    }
-    public List<Review> GetAllReviewsByBookId(int bookId)
-    {
-        var reviews = _reviewRepository.GetReviewsByBookId(bookId);
-        return reviews;
     }
 
     public Review RemoveReview(int reviewId)
@@ -36,9 +37,27 @@ public class ReviewService : IReviewService
         return _reviewRepository.RemoveReview(reviewId);
     }
 
-    public async Task<List<Review>> GetReviewsByUser(int userId)
+
+    public async Task<IEnumerable<ReviewDto>> GetReviewsByBookIdAsync(string isbn)
     {
-        return await Task.FromResult(_reviewRepository.GetReviewsByUser(userId));
+        var reviews = await _reviewRepository.GetReviewsByBookIdAsync(isbn);
+        return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+    }
+
+    public async Task<IEnumerable<ReviewDto>> GetReviewsByUserIdAsync(int userId)
+    {
+        var reviews = await _reviewRepository.GetReviewsByUserIdAsync(userId);
+        return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+    }
+
+    public async Task<List<Review>> GetReviewsByBookIdEagerAsync(string isbn)
+    {
+        return await _reviewRepository.GetReviewsByBookIdAsync(isbn);
+    }
+
+    public async Task<List<Review>> GetReviewsByUserIdEagerAsync(int userId)
+    {
+        return await _reviewRepository.GetReviewsByUserIdAsync(userId);
     }
 
     public async Task<ReviewDto> AddReviewAsync(ReviewDto addReviewDto)
@@ -52,17 +71,5 @@ public class ReviewService : IReviewService
     public async Task<bool> DeleteReviewAsync(int reviewId)
     {
         return await _reviewRepository.DeleteReviewAsync(reviewId);
-    }
-
-    public async Task<IEnumerable<ReviewDto>> GetReviewsByBookIdAsync(int bookId)
-    {
-        var reviews = await _reviewRepository.GetReviewsByBookIdAsync(bookId);
-        return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
-    }
-
-    public async Task<IEnumerable<ReviewDto>> GetReviewsByUserIdAsync(int userId)
-    {
-        var reviews = await _reviewRepository.GetReviewsByUserIdAsync(userId);
-        return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
     }
 }

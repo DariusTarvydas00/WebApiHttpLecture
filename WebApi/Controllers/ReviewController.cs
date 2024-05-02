@@ -17,37 +17,42 @@ public class ReviewController : ControllerBase
     {
         _reviewService = reviewService;
     }
-    //[HttpPost]
-    //public IActionResult AddReview([FromBody] Review review)
-    //{
-    //    try
-    //    {
-    //        return Ok(_reviewService.CreateNewReview(review));
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return BadRequest($"Failed to add review: {ex.Message}");
-    //    }
 
-    //}
-    //[HttpDelete("{id}")]
-    //[Authorize(Roles = "Admin")]
 
-    //public ActionResult RemoveReview(int id)
-    //{
-    //    return Ok(_reviewService.RemoveReview(id));
-
-    //}
+    [HttpGet("{isbn}")]
+    public async Task<ActionResult<ReviewDto>> GetReviewByBookId(string isbn)
+    {
+        try
+        {
+            var review = await _reviewService.GetReviewsByBookIdAsync(isbn);
+            if (review == null)
+            {
+                return NotFound($"No reviews found for the book with ID {isbn}.");
+            }
+            return Ok(review);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Failed to get review: {ex.Message}");
+        }
+    }
 
     [HttpPost]
     public async Task<ActionResult<ReviewDto>> AddReview([FromBody] ReviewDto reviewDTO)
     {
-        var newReview = await _reviewService.AddReviewAsync(reviewDTO);
-        return Ok(newReview);
+        try
+        {
+            var newReview = await _reviewService.AddReviewAsync(reviewDTO);
+            return Ok(newReview);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Failed to add review: {ex.Message}");
+        }
     }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-
     public async Task<IActionResult> DeleteReview(int id)
     {
         var success = await _reviewService.DeleteReviewAsync(id);
@@ -55,7 +60,6 @@ public class ReviewController : ControllerBase
         {
             return NotFound();
         }
-
         return NoContent();
     }
 
