@@ -9,10 +9,23 @@ namespace WebApi.Mappings
         public MappingProfile()
         {
             CreateMap<Book, ResponseBookDto>()
+                .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.ISBN))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
+                .ForMember(dest => dest.PublicationYear, opt => opt.MapFrom(src => src.PublicationYear))
                 .ForMember(dest => dest.AverageRating, opt => opt.Ignore())
                 .ForMember(dest => dest.ReviewCount, opt => opt.Ignore())
+                .ForMember(dest => dest.Publisher, opt => opt.Ignore())
+                .ForMember(dest => dest.Image_URL_S, opt => opt.Ignore())
+                .ForMember(dest => dest.Image_URL_M, opt => opt.Ignore())
+                .ForMember(dest => dest.Image_URL_L, opt => opt.Ignore())
                 .ReverseMap();
+
             CreateMap<Book, RequestBookDto>()
+                .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.ISBN))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
+                .ForMember(dest => dest.PublicationYear, opt => opt.MapFrom(src => src.PublicationYear))
                 .ReverseMap();
 
             CreateMap<Review, ReviewDto>()
@@ -22,8 +35,6 @@ namespace WebApi.Mappings
                .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
                .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.BookISBN))
                .ReverseMap();
-
-
         }
     }
 }

@@ -18,6 +18,16 @@ namespace WebApi.ServiceLayer
             _mapper = mapper;
         }
 
+        public IQueryable<Book> GetAllBooksQueryableAsync()
+        {
+            return _bookRepository.GetAllBooksQueryable();
+        }
+
+        //public IQueryable<Book> GetUnratedBooksByUser()
+        //{
+        //    return 
+        //}
+
         public async Task<IEnumerable<ResponseBookDto>> GetAllBooksAsync(string? title, string? author, string? keyword, bool? sortByRatingAscending, bool? sortByYearAscending, bool? sortByReviewsAscending)
         {
             var query = _bookRepository.GetAllBooksQueryable();

@@ -50,6 +50,16 @@ public class ReviewService : IReviewService
         return _mapper.Map<IEnumerable<ReviewDto>>(reviews);
     }
 
+    public async Task<List<Review>> GetReviewsByBookIdEagerAsync(string isbn)
+    {
+        return await _reviewRepository.GetReviewsByBookIdAsync(isbn);
+    }
+
+    public async Task<List<Review>> GetReviewsByUserIdEagerAsync(int userId)
+    {
+        return await _reviewRepository.GetReviewsByUserIdAsync(userId);
+    }
+
     public async Task<ReviewDto> AddReviewAsync(ReviewDto addReviewDto)
     {
         var review = _mapper.Map<Review>(addReviewDto);
