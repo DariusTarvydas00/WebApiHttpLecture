@@ -11,10 +11,12 @@ namespace WebApi.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IReviewService _reviewService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IReviewService reviewService)
         {
             _bookService = bookService;
+            _reviewService = reviewService;
         }
 
 
@@ -48,6 +50,7 @@ namespace WebApi.Controllers
         //    return Ok(reviews);
         //    throw new System.NotImplementedException();
         //}
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
