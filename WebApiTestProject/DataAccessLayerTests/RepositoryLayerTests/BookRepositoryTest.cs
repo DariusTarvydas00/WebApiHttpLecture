@@ -8,29 +8,39 @@ using WebApi.DataAccessLayer;
 using WebApi.DataAccessLayer.Models;
 using WebApi.DataAccessLayer.Repositories;
 
+
 namespace WebApiTestProject.DataAccessLayerTests.RepositoryLayerTests
 {
-    public class BookRepositoryTest
+    public class BookRepositoryTest : IDisposable
     {
         private readonly DbContextOptions<MainDbContext> _contextOptions;
+        private MainDbContext _context;
 
         public BookRepositoryTest()
         {
             _contextOptions = new DbContextOptionsBuilder<MainDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb")
+                .UseInMemoryDatabase(databaseName: "TestDb_" + Guid.NewGuid())
                 .Options;
 
+            InitializeContext();
             SeedDatabase();
+        }
+
+        private void InitializeContext()
+        {
+            _context = new MainDbContext(_contextOptions);
         }
 
         private void SeedDatabase()
         {
-            using (var context = new MainDbContext(_contextOptions))
-            {
-                context.Books.Add(new Book { Id = 1, Title = "1984", Author = "George Orwell", PublicationYear = 1949 });
-                context.Books.Add(new Book { Id = 2, Title = "The Hobbit", Author = "J.R.R. Tolkien", PublicationYear = 1937 });
-                context.SaveChanges();
-            }
+            _context.Books.Add(new Book { Id = 1, Title = "1984", Author = "George Orwell", PublicationYear = 1949 });
+            _context.Books.Add(new Book { Id = 2, Title = "The Hobbit", Author = "J.R.R. Tolkien", PublicationYear = 1937 });
+            _context.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
         }
         [Fact]
         public async Task GetAllBooksQueryable_ReturnsAllBooks()
