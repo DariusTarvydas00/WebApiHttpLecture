@@ -15,10 +15,10 @@ namespace WebApi.Mappings
                 .ForMember(dest => dest.PublicationYear, opt => opt.MapFrom(src => src.PublicationYear))
                 .ForMember(dest => dest.AverageRating, opt => opt.Ignore())
                 .ForMember(dest => dest.ReviewCount, opt => opt.Ignore())
-                .ForMember(dest => dest.Publisher, opt => opt.Ignore())
-                .ForMember(dest => dest.Image_URL_S, opt => opt.Ignore())
-                .ForMember(dest => dest.Image_URL_M, opt => opt.Ignore())
-                .ForMember(dest => dest.Image_URL_L, opt => opt.Ignore())
+                //.ForMember(dest => dest.Publisher, opt => opt.Ignore())
+                //.ForMember(dest => dest.Image_URL_S, opt => opt.Ignore())
+                //.ForMember(dest => dest.Image_URL_M, opt => opt.Ignore())
+                //.ForMember(dest => dest.Image_URL_L, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Book, RequestBookDto>()
