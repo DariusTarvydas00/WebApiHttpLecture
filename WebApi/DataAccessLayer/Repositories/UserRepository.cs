@@ -13,19 +13,19 @@ namespace WebApi.DataAccessLayer.Repositories
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<List<User?>> GetAll()
         {
             return await _userContext.Users.ToListAsync();
         }
 
         public async Task<User?> GetById(int id)
         {
-            return await _userContext.Users.FirstOrDefaultAsync(user => user.Id == id);
+            return await _userContext.Users.FirstOrDefaultAsync(user => user != null && user.Id == id);
         }
 
         public async Task<User?> GetByUserName(string username)
         {
-            return await _userContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _userContext.Users.FirstOrDefaultAsync(u => u != null && u.Username == username);
         }
 
         public async Task Create(User user)
@@ -41,7 +41,6 @@ namespace WebApi.DataAccessLayer.Repositories
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
-
             _userContext.Users.Update(user);
             await _userContext.SaveChangesAsync();
         }
