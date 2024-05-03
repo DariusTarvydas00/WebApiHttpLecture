@@ -20,6 +20,11 @@ public class ReviewService : IReviewService
         _mapper = mapper;
     }
 
+    public IQueryable<Review> GetAllReviews()
+    {
+        return _reviewRepository.GetAllReviews();
+    }
+
     public List<Review> GetAllReviewsByBookId(string isbn)
     {
         var reviews = _reviewRepository.GetReviewsByBookId(isbn);

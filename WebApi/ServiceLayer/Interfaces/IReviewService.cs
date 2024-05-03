@@ -6,6 +6,7 @@ namespace WebApi.ServiceLayer.Interfaces;
 
 public interface IReviewService
 {
+    public IQueryable<Review> GetAllReviews();
     public List<Review> GetAllReviewsByBookId(string isbn);
     public Review CreateNewReview(Review review);
     public Review RemoveReview(int reviewId);

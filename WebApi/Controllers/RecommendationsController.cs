@@ -1,6 +1,7 @@
 ﻿using Accord.Math.Distances;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using WebApi.ServiceLayer.Interfaces;
 
 namespace WebApi.Controllers
@@ -86,7 +87,10 @@ namespace WebApi.Controllers
 
             try
             {
-                return Ok(await _recommendationService.GetRecommendations(username));
+                DateTime start = DateTime.Now;
+                var results = await _recommendationService.GetRecommendations(username);
+                DateTime end = DateTime.Now;
+                return Ok(new { results, started = start, ended = end});
             }
             catch (Exception ex)
             {

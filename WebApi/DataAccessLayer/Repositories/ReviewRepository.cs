@@ -21,9 +21,9 @@ public class ReviewRepository : IReviewRepository
         return review;
     }
 
-    public List<Review> GetAllReviews()
+    public IQueryable<Review> GetAllReviews()
     {
-        var reviews = _mainDbContext.Reviews.ToList();
+        var reviews = _mainDbContext.Reviews;
         return reviews;
     }
 
