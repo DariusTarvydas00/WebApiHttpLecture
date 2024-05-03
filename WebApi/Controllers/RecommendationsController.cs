@@ -19,30 +19,57 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("RecommendationTest")]
-        public async Task<IActionResult> GetRecommendationsTEST()
+        public IActionResult GetRecommendationsTEST()
         {
-            double[] a = { 1, 2 };
-            double[] b = { 2, 4 };
-            double[] c = { 2.5, 4 };
-            double[] d = { 4.5, 5 };
             Cosine cosine = new Cosine();
-            double distanceca = Double.Round(cosine.Distance(c, a),9);
-            double distancecb = Double.Round(cosine.Distance(c, b),9);
-            double distancecd = Double.Round(cosine.Distance(c, d),9);
-            double distanceab = Double.Round(cosine.Distance(a, b),9);
-            List<double> distances = new List<double> { distanceca, distancecb, distancecd, distanceab };
-            return Ok(distances);
+
+            double[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            double[] b = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            double distanceab = Double.Round(cosine.Distance(a, b), 9);
+
+            double[] c = { 1, 0, 3, 0, 5, 0, 7, 8, 9 };
+            double[] d = { 1, 2, 0, 4, 0, 6, 7, 8, 9 };
+            double distancecd = Double.Round(cosine.Distance(c, d), 9);
+
+            double[] e = { 1, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 8, 9 };
+            double[] f = { 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 7, 8, 9 };
+            double distanceef = Double.Round(cosine.Distance(e, f), 9);
+
+            List<double> distances = [];
+            distances.Add(distanceab);
+            distances.Add(distancecd);
+            distances.Add(distanceef);
+
+            List<double> mydistances = [];
+            mydistances.Add(Double.Round(1 - MyCosineFormula(a, b), 9));
+            mydistances.Add(Double.Round(1 - MyCosineFormula(c, d), 9));
+            mydistances.Add(Double.Round(1 - MyCosineFormula(e, f), 9));
+
+            return Ok(new { distances, mydistances });
 
             //rasti useri kuris yra panasus i useri kuris yra prisijunges ir pasiulyti viena is jo rekomendaciju - user-based recommendation
-            //the above is user-based recommendation, we can also do item-based recommendation
-
-
+            
             //double[] item1 = {user1rating, user2rating, user3rating}; (order is important)
             //double[] item2 = {user1rating, user2rating, user3rating}; (order is important)
             //the above gives us vectors by which we can calculate the similarity between the two items
             //when we have the similarity between the two items we can recommend the item with the highest similarity to the logged in user
             //but this will not have qualitative features accounted for, i still want to recoment harry potter 2 to someone who liked harry potter 1, even if i dont know the ratings
         }
+
+        private double MyCosineFormula(double[] a, double[] b)
+        {
+            double dotProduct = 0;
+            double normA = 0;
+            double normB = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                dotProduct += a[i] * b[i];
+                normA += a[i] * a[i];
+                normB += b[i] * b[i];
+            }
+            return dotProduct / (Math.Sqrt(normA) * Math.Sqrt(normB));
+        }
+
 
         [HttpGet]
         //[Authorize]
