@@ -15,5 +15,5 @@ public interface IReviewService
     public Task<List<Review>> GetReviewsByUserIdEagerAsync(int userId);
     public Task<ReviewDto> AddReviewAsync(ReviewDto addReviewDto);
     public Task<bool> DeleteReviewAsync(int reviewId);
-
+    List<Review> GetAllReviews();
 }

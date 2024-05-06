@@ -1,5 +1,7 @@
 ﻿using Accord.Math.Distances;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Numerics;
 using WebApi.DataAccessLayer.Models;
 using WebApi.ServiceLayer.DTOs;
 using WebApi.ServiceLayer.Interfaces;
@@ -13,6 +15,9 @@ namespace WebApi.ServiceLayer
         private readonly IBookService _bookService;
         private readonly IReviewService _reviewService;
         private readonly ILogger<RecommendationsService> _logger;
+        private List<User> _allUsers;
+        private List<Review> _allReviews;
+
 
         public RecommendationsService(IUserService userService, IBookService bookService, IReviewService reviewService, ILogger<RecommendationsService> logger)
         {
@@ -22,110 +27,69 @@ namespace WebApi.ServiceLayer
             _logger = logger;
         }
 
-        public async Task<RecommendationDto> GetRecommendations(string username)
+        public async Task InitializeDataAsync()
         {
-            RecommendationDto recommendations = new RecommendationDto();
+            _allUsers = _userService.GetAll().Result.ToList();
+            _allReviews = _reviewService.GetAllReviews();
+        }
+        public async Task<List<Book>> GetRecommendations(string username)
+        {
+            //RecommendationDto recommendations = new RecommendationDto();
             int userId = (await _userService.GetByUserName(username)).Id;
             var allUserReviews = await _reviewService.GetReviewsByUserIdEagerAsync(userId);
             var goodUserBooks = allUserReviews.Where(r => r.Rating >= 8).OrderByDescending(r => r.Rating).Take(5).Select(r => r.Book);
-            var unratedBooks = _bookService.GetAllBooksQueryableAsync().Where(b => b.Reviews.Any(i => i.UserId != userId)).ToList();
+            var unratedBooks = _bookService.GetAllBooksQueryableAsync().Where(b => !b.Reviews.Any(r => r.UserId == userId)).ToList();
 
-
-            //List<Book> unratedBooks = new List<Book>();
-            //var goodUserReviews = allUserReviews.Where(r => r.Rating >= 8).OrderByDescending(r => r.Rating).Take(5);
-            //var emptyUserReviews = allUserReviews.Where(r => r.Rating == 0);
-
-            recommendations.RecommendedByCosineDistance = await GetRecommendationsByCosineDistanceAsync(goodUserBooks, unratedBooks);
+            var recommendations = await GetRecommendationsByCosineDistanceAsync(goodUserBooks, unratedBooks);
 
             return recommendations;
         }
 
-        private async Task<List<ResponseBookDto>> GetRecommendationsByCosineDistanceAsync(IEnumerable<Book> goodUserReviews, IEnumerable<Book> emptyUserReviews)
+        public async Task<List<Book>> GetRecommendationsByCosineDistanceAsync(IEnumerable<Book> goodUserBooks, IEnumerable<Book> unratedBooks)
         {
-            Dictionary<string, double> bookDistances = new Dictionary<string, double>();
-
+            await InitializeDataAsync();
             Cosine cosine = new Cosine();
-
-            int userCount = (await _userService.GetAll()).Count();
-            
-
-            foreach (var ratedBook in goodUserReviews)
+            ConcurrentDictionary<string, double> bookDistances = new ConcurrentDictionary<string, double>();
+            List<Task> tasks = new List<Task>();
+            foreach (var ratedBook in goodUserBooks)
             {
-                int loggingCounter = 0;
-                foreach (var unratedBook in emptyUserReviews)
+                tasks.Add(Task.Run(async () =>
                 {
-                    //double[] ratedBookVector = (await _reviewService.GetReviewsByBookIdAsync(ratedBook.ISBN)).Select(r => (double)r.Rating).ToArray();
-                    //double[] unratedBookVector = (await _reviewService.GetReviewsByBookIdAsync(unratedBook.ISBN)).Select(r => (double)r.Rating).ToArray();
-
-                    //double[] item1 = {user1rating, user2rating, user3rating}; (order is important)
-                    //double[] item2 = {user1rating, user2rating, user3rating}; (order is important)
-
-                    //var ratedBookReviews = await _reviewService.GetReviewsByBookIdEagerAsync(ratedBook.ISBN);
-                    //var unratedBookReviews = await _reviewService.GetReviewsByBookIdEagerAsync(unratedBook.ISBN);
-
-
-                    //var ratedBookReviews = ratedBook.Reviews;
-                    //var unratedBookReviews = unratedBook.Reviews;
-
-                    //double[] ratedBookVector = new double[userCount];
-                    //double[] unratedBookVector = new double[userCount];
-
-                    //for (int i = 0; i < userCount; i++)
-                    //{
-                    //    var ratedReview = ratedBookReviews.FirstOrDefault(r => r.User.Id == i);
-                    //    var unratedReview = unratedBookReviews.FirstOrDefault(r => r.User.Id == i);
-
-                    //    if (ratedReview != null)
-                    //    {
-                    //        ratedBookVector[i] = ratedReview.Rating;
-                    //    }
-                    //    else
-                    //    {
-                    //        ratedBookVector[i] = 0;
-                    //    }
-
-                    //    if (unratedReview != null)
-                    //    {
-                    //        unratedBookVector[i] = unratedReview.Rating;
-                    //    }
-                    //    else
-                    //    {
-                    //        unratedBookVector[i] = 0;
-                    //    }
-                    //}
-
-
-                    var ratedBookVector = _bookService.GetBookVector(ratedBook.ISBN);
-                    var unratedBookVector = _bookService.GetBookVector(unratedBook.ISBN);
-
-                    loggingCounter = loggingCounter + 1;
-                    _logger.LogInformation("rated: " + ratedBook.ISBN + "   unrated: " + unratedBook.ISBN + "   counter: " + loggingCounter);
-
-                    double distance = Double.Round(cosine.Distance(ratedBookVector, unratedBookVector), 9);
-                    if (bookDistances.Count < 5)
+                    var ratedBookVector = await GetBookVector(ratedBook.ISBN);
+                    foreach (var unratedBook in unratedBooks)
                     {
-                        bookDistances.Add(unratedBook.ISBN, distance);
+                        var unratedBookVector = await GetBookVector(unratedBook.ISBN);
+                        double distance = Math.Round(cosine.Distance(ratedBookVector, unratedBookVector), 9);
+                        bookDistances.AddOrUpdate(unratedBook.ISBN, distance, (key, oldVal) => Math.Min(oldVal, distance));
                     }
-                    else
-                    {
-                        KeyValuePair<string, double> worstRecommendationSoFar = bookDistances.OrderBy(b => b.Value).Last();
-                        if (distance < worstRecommendationSoFar.Value)
-                        {
-                            bookDistances.Remove(worstRecommendationSoFar.Key);
-                            bookDistances.Add(unratedBook.ISBN, distance);
-                        }
-                    }
-                }
+                }));
             }
+            await Task.WhenAll(tasks);
 
-            List<ResponseBookDto> recommendedBooks = new List<ResponseBookDto>();
-            foreach (var bookDistance in bookDistances)
-            {
-                recommendedBooks.Add(await _bookService.GetBookByIdAsync(bookDistance.Key));
-            }
+            var recommendedBooks = bookDistances.OrderBy(b => b.Value)
+                                                .Take(5)
+                                                .Select(b => unratedBooks.FirstOrDefault(x => x.ISBN == b.Key))
+                                                .ToList();
 
             return recommendedBooks;
         }
+        public async Task<double[]> GetBookVector(string isbn)
+        {
+            double[] bookVector = new double[_allUsers.Count];
+            var reviews = _allReviews.Where(r => r.BookISBN == isbn).ToList();
 
+            foreach (var review in reviews)
+            {
+                int index = _allUsers.FindIndex(u => u.Id == review.UserId);
+                if (index != -1)
+                {
+                    bookVector[index] = review.Rating;
+                }
+            }
+
+            return bookVector;
+        }
     }
+
 }
+

@@ -25,6 +25,11 @@ public class ReviewService : IReviewService
         var reviews = _reviewRepository.GetReviewsByBookId(isbn);
         return reviews;
     }
+    public List<Review> GetAllReviews()
+    {
+        var reviews = _reviewRepository.GetAllReviews();
+        return reviews;
+    }
 
     public Review CreateNewReview(Review review)
     {
